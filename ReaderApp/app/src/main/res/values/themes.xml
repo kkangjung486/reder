@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 앱이 켜지는 순간 잠깐 보이는 배경도 크림색으로 맞춥니다. -->
+    <style name="Theme.ReaderApp" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/cream</item>
+    </style>
+
+</resources>
