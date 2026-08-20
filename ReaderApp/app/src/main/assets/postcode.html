@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>우편번호 검색</title>
+    <style>
+        html, body { margin: 0; padding: 0; background: #FAF6F0; }
+        /* 높이는 아래 자바스크립트에서 실제 픽셀 값으로 넣어줍니다.
+           %(퍼센트)로 지정하면 높이가 0이 되어 검색창이 안 보입니다. */
+        #wrap { width: 100%; }
+    </style>
+</head>
+<body>
+<div id="wrap"></div>
+
+<!-- 카카오(다음) 우편번호 서비스. 별도 신청이나 키 없이 무료로 쓸 수 있습니다. -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    // 주소를 고르면 안드로이드 쪽으로 우편번호와 주소를 넘겨줍니다.
+    function sendToApp(zonecode, address) {
+        if (window.AndroidBridge && window.AndroidBridge.onAddressSelected) {
+            window.AndroidBridge.onAddressSelected(zonecode, address);
+        }
+    }
+
+    function sendError(message) {
+        if (window.AndroidBridge && window.AndroidBridge.onError) {
+            window.AndroidBridge.onError(message);
+        }
+    }
+
+    var wrap = document.getElementById('wrap');
+
+    // 검색창 높이를 화면 높이(픽셀)에 맞춥니다.
+    function fitHeight() {
+        var h = window.innerHeight;
+        wrap.style.height = h + 'px';
+        var frame = wrap.querySelector('iframe');
+        if (frame) {
+            frame.style.height = h + 'px';
+        }
+    }
+
+    // 스크립트가 아예 안 불러와졌을 때 (인터넷이 없을 때)
+    if (typeof daum === 'undefined' || !daum.Postcode) {
+        sendError('주소 검색 서비스를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
+    } else {
+        fitHeight();
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 도로명주소가 있으면 도로명주소, 없으면 지번주소를 씁니다.
+                var addr = data.roadAddress || data.jibunAddress;
+
+                // 참고항목(동 이름, 아파트 이름)을 괄호로 붙여줍니다.
+                var extra = '';
+                if (data.bname && /[동|로|가]$/.test(data.bname)) {
+                    extra += data.bname;
+                }
+                if (data.buildingName && data.apartment === 'Y') {
+                    extra += (extra !== '' ? ', ' : '') + data.buildingName;
+                }
+                if (extra !== '') {
+                    addr += ' (' + extra + ')';
+                }
+
+                sendToApp(data.zonecode, addr);
+            },
+            width: '100%',
+            height: window.innerHeight
+        }).embed(wrap);
+
+        // 키보드가 올라오는 등 화면 높이가 바뀌면 검색창 높이도 같이 맞춰줍니다.
+        window.addEventListener('resize', fitHeight);
+    }
+</script>
+</body>
+</html>

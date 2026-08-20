@@ -15,3 +15,4 @@ val OnSurface = Color(0xFF00201B)               // 기본 글자색
 val OnSurfaceVariant = Color(0xFF3F4946)        // 설명글 회색
 val SurfaceContainerLowest = Color(0xFFFFFFFF)  // 카드 배경 (흰색)
 val OutlineVariant = Color(0xFFBFC9C5)          // 카드 테두리 회색
+val ErrorRed = Color(0xFFBA1A1A)                // 오류 안내 글자색 (빨강)

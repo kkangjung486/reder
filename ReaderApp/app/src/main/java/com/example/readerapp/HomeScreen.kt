@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.History
@@ -68,11 +69,14 @@ import java.util.Calendar
  * 화면은 크게 4덩어리입니다.
  *   1) 맨 위 제목 영역          -> Header()
  *   2) "스마트 매칭" 소개 카드   -> IntroCard()
- *   3) 큰 버튼 2개 + 작은 카드 2개
+ *   3) 큰 버튼 3개 + 작은 카드 2개
  *   4) 맨 아래 탭 바            -> BottomBar()
+ *
+ * @param onCompanyRegisterClick "회사등록" 버튼을 눌렀을 때 실행할 동작입니다.
+ *        넘겨주지 않으면 아무 일도 일어나지 않습니다. (미리보기에서 쓰입니다.)
  */
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onCompanyRegisterClick: () -> Unit = {}) {
     Scaffold(
         containerColor = Cream,
         bottomBar = { BottomBar() }
@@ -93,7 +97,7 @@ fun HomeScreen() {
             ) {
                 IntroCard(modifier = Modifier.padding(horizontal = 24.dp))
 
-                // 큰 버튼 2개
+                // 큰 버튼 3개
                 Column(
                     modifier = Modifier.padding(horizontal = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -105,6 +109,12 @@ fun HomeScreen() {
                     OutlinedBigButton(
                         icon = Icons.Filled.SupportAgent,
                         text = "문의 남기기"
+                    )
+                    // 누르면 "회사 정보 등록" 화면으로 이동합니다.
+                    OutlinedBigButton(
+                        icon = Icons.Filled.Apartment,
+                        text = "회사등록",
+                        onClick = onCompanyRegisterClick
                     )
                 }
 
@@ -216,10 +226,10 @@ private fun IntroCard(modifier: Modifier = Modifier) {
  * 3-1) 진한 초록 큰 버튼
  * --------------------------------------------------------------- */
 @Composable
-private fun FilledBigButton(icon: ImageVector, text: String) {
+private fun FilledBigButton(icon: ImageVector, text: String, onClick: () -> Unit = {}) {
     Button(
-        // 아직 아무 동작도 하지 않습니다. 나중에 여기에 기능을 넣으면 됩니다.
-        onClick = { },
+        // onClick 을 넘겨주지 않으면 아직 아무 동작도 하지 않습니다.
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(72.dp),
@@ -244,9 +254,10 @@ private fun FilledBigButton(icon: ImageVector, text: String) {
  * 3-2) 테두리만 있는 큰 버튼
  * --------------------------------------------------------------- */
 @Composable
-private fun OutlinedBigButton(icon: ImageVector, text: String) {
+private fun OutlinedBigButton(icon: ImageVector, text: String, onClick: () -> Unit = {}) {
     OutlinedButton(
-        onClick = { },
+        // onClick 을 넘겨주지 않으면 아직 아무 동작도 하지 않습니다.
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(72.dp),
